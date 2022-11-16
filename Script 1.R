@@ -8,3 +8,4 @@ str(ipf_lifts)
 ##test
 
 ## pushing again after adding collabs
+changedFiles()
