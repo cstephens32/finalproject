@@ -8,6 +8,26 @@ date: '2022-11-16'
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+```{r packages, include=FALSE}
+#### Packages ####
+## If a package is installed, it will be loaded. If any 
+## are not, the missing package(s) will be installed 
+## from CRAN and then loaded.
+
+## Packages of interest
+packages = c("tidyverse")
+
+## Now load or install&load all
+package.check <- lapply(
+  packages,
+  FUN = function(x) {
+    if (!require(x, character.only = TRUE)) {
+      install.packages(x, dependencies = TRUE)
+      library(x, character.only = TRUE)}})
+
+```
+
+
 ```{r}
 ipf_lifts <- readr::read_csv("https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2019/2019-10-08/ipf_lifts.csv")
 ```
