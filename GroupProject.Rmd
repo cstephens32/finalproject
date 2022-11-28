@@ -50,3 +50,11 @@ lifts <- SBD_IPF %>%
 
 ## EDA Set Up
 
+
+
+
+table_1 <- ipf_lifts %>%
+  group_by(sex, age_class, weight_class_kg) %>%
+  summarize(Total = n())
+  
+  
