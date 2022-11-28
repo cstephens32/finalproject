@@ -52,8 +52,18 @@ lifts <- SBD_IPF %>%
 ## EDA Set Up
 
 
+```{r overall totals}
+table_1 <- ipf_lifts %>%
+  group_by(sex, age_class, weight_class_kg) %>%
+  summarize(Total = n())
+```  
 
-<<<<<<< HEAD
+
+
+
+
+
+
 ```{r interactive }
 sex_options <- c("Male", "Female", "Both")
 #add other options later
@@ -73,11 +83,3 @@ userFiltered <- reactive(
   })
    
 renderDataTable(userFiltered())
-```
-=======
-```{r overall totals}
-table_1 <- ipf_lifts %>%
-  group_by(sex, age_class, weight_class_kg) %>%
-  summarize(Total = n())
-```  
->>>>>>> 6fe006230705e7e7eaa9f9ba93f8bcb2150fd3ca
