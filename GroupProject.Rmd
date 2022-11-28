@@ -32,6 +32,20 @@ package.check <- lapply(
 ipf_lifts <- readr::read_csv("https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2019/2019-10-08/ipf_lifts.csv")
 ```
 
+## Removing non-SBD competitors and creating total three variable
+```{r}
+
+SBD_IPF <- ipf_lifts %>% 
+  filter(event == "SBD")
+  
+
+lifts <- SBD_IPF %>%
+  rowwise() %>%
+  mutate(total_three = sum(c(best3squat_kg, best3bench_kg, best3deadlift_kg), na.rm = TRUE))
+
+```
+
+
 ##GAMEPLAN: 1 pane = gender, 1 pane = interactive age groups, 1 pane = top scores, text-block
 
 ## EDA Set Up
