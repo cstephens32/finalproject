@@ -12,6 +12,7 @@ knitr::opts_chunk$set(echo = TRUE)
 ipf_lifts <- readr::read_csv("https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2019/2019-10-08/ipf_lifts.csv")
 ```
 
+##GAMEPLAN: 1 pane = gender, 1 pane = interactive age groups, 1 pane = top scores
 
 ## EDA Set Up
 
