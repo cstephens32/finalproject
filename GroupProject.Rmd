@@ -2,6 +2,7 @@
 title: "Project File"
 output: html_document
 date: '2022-11-16'
+runtime: shiny
 ---
 
 ```{r setup, include=FALSE}
@@ -15,7 +16,7 @@ knitr::opts_chunk$set(echo = TRUE)
 ## from CRAN and then loaded.
 
 ## Packages of interest
-packages = c("tidyverse")
+packages = c("tidyverse", "flexdashboard", "shiny", "DT")
 
 ## Now load or install&load all
 package.check <- lapply(
@@ -29,9 +30,31 @@ package.check <- lapply(
 
 
 ```{r}
-ipf_lifts <- readr::read_csv("https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2019/2019-10-08/ipf_lifts.csv")
+ipf_lifts <- readr::read_csv("https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2019/2019-10-08/ipf_lifts.csv") %>% mutate(sex2 = if_else(sex == "F", "Female", "Male"))
 ```
 
 
 ## EDA Set Up
 
+
+
+```{r interactive }
+sex_options <- c("Male", "Female", "Both")
+#add other options later
+```
+
+```{r filters}
+selectInput("select_sex", label = "Select Gender:", choices = sex_options)
+```
+
+
+```{r render table}
+userFiltered <- reactive(
+  if(input$select_sex == "Both")
+    {ipf_lifts}
+  else{
+    ipf_lifts %>% filter(sex2 == input$select_sex )
+  })
+   
+renderDataTable(userFiltered())
+```
