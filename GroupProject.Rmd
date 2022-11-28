@@ -38,9 +38,8 @@ ipf_lifts <- readr::read_csv("https://raw.githubusercontent.com/rfordatascience/
 
 
 
-
+```{r overall totals}
 table_1 <- ipf_lifts %>%
   group_by(sex, age_class, weight_class_kg) %>%
   summarize(Total = n())
-  
-  
+```  
