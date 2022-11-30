@@ -1,0 +1,77 @@
+---
+title: "Tabset Row"
+output: 
+  flexdashboard::flex_dashboard:
+    orientation: columns
+runtime: shiny
+---
+
+```{r setup, include=FALSE}
+library(flexdashboard)
+library(readr)
+library(lubridate)
+library(shiny)
+library(jsonlite)
+library(maptools)
+library(ggplot2)
+library(tidyr)
+library(dplyr)
+library(purrr)
+library(leaflet)
+library(plotly)
+library(DT)
+library(ggthemes)
+library(viridis)
+library(table1)
+ipf_lifts <- readr::read_csv("https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2019/2019-10-08/ipf_lifts.csv") %>% mutate(sex2 = if_else(sex == "F", "Female", "Male"))
+```
+
+```{r}
+## Removing non-SBD competitors and creating total three variable
+
+SBD_IPF <- ipf_lifts %>% 
+  filter(event == "SBD")
+  
+
+lifts <- SBD_IPF %>%
+  rowwise() %>%
+  mutate(total_three = sum(c(best3squat_kg, best3bench_kg, best3deadlift_kg), na.rm = TRUE))
+```
+
+
+Column {data-width=1000}
+-------------------------------------
+   
+### I didn't choose The powerlifting life 
+    
+blalalalalalalalalalalalalablalalalalalalalalalalalalablalalalalalalalalalalal
+alablalalalalalalalalalalalalablalalalalalalalalalalalalablalalalalalalalalala
+lalalablalalalalalalalalalalalalablalalalalalalalalalalalalablalalalalalalalal
+alalalalablalalalalalalalalalalalalablalalalalalalalalalalalalablalalalalala
+lalalalalalalablalalalalalalalalalalalalablalalalalalalalalalalalalablalalala
+lalalalalalalalalablalalalalalalalalalalalalablalalalalalalalalalalalalablalala
+lalalalalalalalalalablalalalalalalalalalalalalablalalalalalalalalalalalala
+   
+### Table 1
+
+```{r, fig.height= 10 }
+tabl1 <- table1(~ age_class + federation | sex, data=lifts)
+tabl1
+```
+
+Column {data-width=1300}
+-------------------------------------
+
+### Chart 3
+
+```{r}
+lifts %>% 
+  ggplot(aes(x = age_class, total_three))
+```   
+ 
+### Chart 4
+    
+```{r}
+lifts %>% 
+  ggplot(aes(x = age_class, total_three))
+```
