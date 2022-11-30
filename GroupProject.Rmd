@@ -53,10 +53,19 @@ lifts <- SBD_IPF %>%
 
 
 ```{r overall totals}
-table_1 <- ipf_lifts %>%
+library(broom)
+table_1 <- lifts %>%
   group_by(sex, age_class, weight_class_kg) %>%
   summarize(Total = n())
+
+table_2 <- lifts %>%
+  group_by(sex) %>%
+  summarize(Total = n())
+table_2 <- lifts %>%
+  group_by(age_class) %>%
+  summarize(Total = n())
 ```  
+
 
 
 
@@ -109,6 +118,7 @@ dt.subset <- reactive({
 
 renderDataTable(dt.subset3())
 
+```
 
 ```{r interactive }
 sex_options <- c("Male", "Female", "Both")
@@ -169,5 +179,3 @@ renderDataTable(avg_data())
 
 ```
 
-Average dead lift for this group is : `r reactive({avg_data()$mean_deadlift})`
-Average age within this group is : `r reactive({avg_data()$mean_age})`

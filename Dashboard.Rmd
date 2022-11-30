@@ -1,9 +1,10 @@
 ---
 title: "Tabset Row"
+runtime: shiny
 output: 
   flexdashboard::flex_dashboard:
     orientation: columns
-runtime: shiny
+
 ---
 
 ```{r setup, include=FALSE}
@@ -41,22 +42,55 @@ lifts <- SBD_IPF %>%
 
 Column {data-width=1000}
 -------------------------------------
-   
-### I didn't choose The powerlifting life 
-    
-blalalalalalalalalalalalalablalalalalalalalalalalalalablalalalalalalalalalalal
-alablalalalalalalalalalalalalablalalalalalalalalalalalalablalalalalalalalalala
-lalalablalalalalalalalalalalalalablalalalalalalalalalalalalablalalalalalalalal
-alalalalablalalalalalalalalalalalalablalalalalalalalalalalalalablalalalalala
-lalalalalalalablalalalalalalalalalalalalablalalalalalalalalalalalalablalalala
-lalalalalalalalalablalalalalalalalalalalalalablalalalalalalalalalalalalablalala
-lalalalalalalalalalablalalalalalalalalalalalalablalalalalalalalalalalalala
+### Text Box
+ Text here. 
    
 ### Age and Sex Most Lifted Table
 
-```{r, fig.height= 10 }
-tabl1 <- table1(~ age_class + federation | sex, data=lifts)
-tabl1
+```{r interactive, echo=FALSE }
+#sex options
+selectInput('sex_select', 'Select sex:',
+            choices = c("All", ipf_lifts$sex2 %>% unique()), selected="All")
+
+dt.subset <- reactive({
+    if (input$sex_select=="All") {
+      ipf_lifts
+    }else{
+      ipf_lifts %>% filter(sex2 == input$sex_select)
+    }
+  })
+
+#age options
+
+selectInput('ageclass_select', 'Select Age Class:', 
+                choices = c("All", (ipf_lifts$age_class) %>% unique()), 
+                selected =  "All" )
+
+
+ dt.subset2 <- reactive({
+    if (input$ageclass_select== "All") {
+    dt.subset()
+    }else{
+   dt.subset() %>% filter(age_class == input$ageclass_select)
+    }
+  })
+
+renderUI({
+    selectInput('weightclass_select', 'Select Weight Class:', 
+                choices = c("All", (dt.subset2()$weight_class_kg ) %>% unique()), 
+                selected =  "All" )
+  })
+
+   dt.subset3 <- reactive({
+    if (input$weightclass_select=="All") {
+      dt.subset2()
+    }else{
+      dt.subset2() %>% filter(weight_class_kg == input$weightclass_select)
+    }
+  })
+
+renderDataTable(dt.subset3())
+   
 ```
 
 Column {data-width=1300}
