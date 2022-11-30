@@ -72,6 +72,11 @@ lifts %>%
 ### Sex and Weight Lifted
     
 ```{r}
-lifts %>% 
-  ggplot(aes(x = age_class, total_three))
+sex_lifting <- lifts %>%
+  ggplot(aes(x = date, y = total_three, color = sex)) + 
+  geom_line() +
+  facet_wrap(~sex)
+sex_lifting
+
+ggplotly(sex_lifting)
 ```
