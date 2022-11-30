@@ -52,7 +52,7 @@ lalalalalalalablalalalalalalalalalalalalablalalalalalalalalalalalalablalalala
 lalalalalalalalalablalalalalalalalalalalalalablalalalalalalalalalalalalablalala
 lalalalalalalalalalablalalalalalalalalalalalalablalalalalalalalalalalalala
    
-### Table 1
+### Age and Sex Most Lifted Table
 
 ```{r, fig.height= 10 }
 tabl1 <- table1(~ age_class + federation | sex, data=lifts)
@@ -62,14 +62,14 @@ tabl1
 Column {data-width=1300}
 -------------------------------------
 
-### Chart 3
+### Age and Weight Lifted
 
 ```{r}
 lifts %>% 
   ggplot(aes(x = age_class, total_three))
 ```   
  
-### Chart 4
+### Sex and Weight Lifted
     
 ```{r}
 lifts %>% 
