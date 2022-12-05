@@ -11,6 +11,7 @@ output:
 
 ```{r setup, include=FALSE}
 library(flexdashboard)
+library(metathis)
 library(readr)
 library(lubridate)
 library(shiny)
@@ -144,3 +145,20 @@ ggplotly(sex_lifting)
 ```{r}
 renderDataTable(dt.subset3())
 ```
+
+### Instagram Handle 
+```{r}
+meta() %>%
+  meta_social(
+    title = "Powerlifting Instagram",
+    description = "Follow our lifting progress as we prepare for our meet",
+    url = "https://www.instagram.com/gradschool_lifts/",
+    image = "https://www.instagram.com/p/Ch7whRjO251/",
+    image_alt = "Cydney & Reagan flex for the 'Gram",
+    og_type = "social media",
+    og_author = c("Cydney Jardine", "Reagan Chiaverini"),
+    twitter_card_type = "app",
+    twitter_creator = "@gradschool_lifts"
+  )
+```
+
