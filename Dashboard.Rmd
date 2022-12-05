@@ -40,11 +40,19 @@ lifts <- SBD_IPF %>%
   mutate(total_three = sum(c(best3squat_kg, best3bench_kg, best3deadlift_kg), na.rm = TRUE))
 ```
 
+Column {.sidebar}
+-----------------------------------------------------------------------
 
-Column {data-width=1000}
--------------------------------------
-   
-### Age and Sex Most Lifted Table
+### I didn't choose The powerlifting life 
+    
+blalalalalalalalalalalalalablalalalalalala
+lalalalalalablalalalalalalalalalalal
+alablalalalalalalalalalalalalablalal
+alalalalalalalalalalablalalalalalalalalala
+lalalablalalalalalalalalalalalalablala
+lalalalalalalalalalalablalalalalalalalal
+
+### Data Filtering
 
 ```{r interactive, echo=FALSE }
 #sex options
@@ -88,12 +96,11 @@ renderUI({
     }
   })
 
-renderDataTable(dt.subset3())
-   
 ```
 
-Column {data-width=1300}
+Column {.tabset}
 -------------------------------------
+
 
 ### Age and Weight Lifted
 
@@ -114,4 +121,10 @@ sex_lifting <- lifts %>%
 
 
 ggplotly(sex_lifting)
+```
+
+### Table
+
+```{r}
+renderDataTable(dt.subset3())
 ```

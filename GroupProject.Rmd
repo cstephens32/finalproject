@@ -179,3 +179,8 @@ renderDataTable(avg_data())
 
 ```
 
+## Setting up Sex and Weight Lifted Graph
+```{r}
+
+```
+
