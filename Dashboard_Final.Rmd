@@ -4,7 +4,7 @@ runtime: shiny
 output: 
   flexdashboard::flex_dashboard:
     orientation: columns
-    theme: 
+theme: 
       version: 4
       bootswatch: minty
 ---
@@ -15,6 +15,7 @@ library(metathis)
 library(readr)
 library(lubridate)
 library(shiny)
+library(shinyWidgets)
 library(jsonlite)
 library(maptools)
 library(ggplot2)
@@ -32,17 +33,29 @@ filter(division != "NA")
 ```
 
 ```{r}
-## Removing non-SBD competitors and creating total three variable
+## COMMENTED OUT 
+## UNNEEDED with reactive below
 
-SBD_IPF <- ipf_lifts %>% 
-  filter(event == "SBD")
-  
-
-lifts <- SBD_IPF %>%
-  rowwise() %>%
-  mutate(total_three = sum(c(best3squat_kg, best3bench_kg, best3deadlift_kg), na.rm = TRUE))
+# ## Removing non-SBD competitors and creating total three variable
+# 
+# SBD_IPF <- ipf_lifts %>% 
+#   filter(event == "SBD")
+#   
+# 
+# lifts <- SBD_IPF %>%
+#   rowwise() %>%
+#   mutate(total_three = sum(c(best3squat_kg, best3bench_kg, best3deadlift_kg), na.rm = TRUE))
 ```
 
+```{r sbdipf}
+filt_lift <- reactive({
+ filtered() %>% 
+  filter(event == "SBD") %>%
+  rowwise() %>%
+  mutate(total_three = sum(c(best3squat_kg, best3bench_kg, best3deadlift_kg), na.rm = TRUE))
+})
+
+```
 ---
 title: '`IPF Lifting Data`'
 ---
@@ -73,8 +86,6 @@ blalalalalalalalalala
 selectizeInput('division_select', 'Select Division:',
             choices = c("All", ipf_lifts$division %>% unique()), selected="All", multiple = T)
 
-
-
 overall.subset <- reactive({
     if (input$division_select=="All") {
       ipf_lifts
@@ -83,7 +94,7 @@ overall.subset <- reactive({
     }
   })
 
-#age options
+#meet options
 
 selectInput('meet_select', 'Select Meets:',
                 choices = c("All", (ipf_lifts$meet_name) %>% unique()),
@@ -112,30 +123,51 @@ Column {.tabset}
 ### Age and Weight Lifted
 
 ```{r}
-age_lifting1 <- lifts %>%
-  ggplot(aes(x = age, y = total_three)) + 
-  geom_bar(stat = "identity") +
-  coord_flip()
+#build plot  
+   agesex_Plot <- reactive({
+    p <-  filt_lift() %>% #filt_lift() makes this reactive to filtered data
+      ggplot(aes(x = age, y = total_three)) + 
+      geom_bar(stat = "identity") +
+      coord_flip()
+    ggplot_build(p)
+  })
 
-
-ggplotly(age_lifting1)
+#render the new plot as it changes
+  renderPlot({
+    agesex_Plot()
+  })
 ```   
  
 ### Sex and Weight Lifted
     
 ```{r}
-sex_lifting <- lifts %>%
+#commented out for interactive options  
+# sex_lifting <- lifts %>%
+#   ggplot(aes(x = date, y = total_three, color = sex)) + 
+#   labs(x = "Date", y = "Total 3 Lifts") +
+#   geom_line() +
+#   facet_wrap(~sex2)
+# sex_lifting
+# 
+# ggplotly(sex_lifting)
+
+ weightsex_Plot <- reactive({
+  p2 <-  filt_lift()  %>%
   ggplot(aes(x = date, y = total_three, color = sex)) + 
   labs(x = "Date", y = "Total 3 Lifts") +
   geom_line() +
   facet_wrap(~sex2)
-sex_lifting
-
-ggplotly(sex_lifting)
+ ggplot_build(p2)
+  })
+  
+renderPlot({
+    weightsex_Plot()
+  })  
 ```
 
 ### Table
 
+#### Select Options
 ```{r interactive, echo=FALSE }
 #sex options
 selectInput('sex_select', 'Select sex:',
@@ -170,7 +202,7 @@ selectInput('ageclass_select', 'Select Age Class:',
 #                 selected =  "All" )
 #   })
 
-     selectInput('weightclass_select', 'Select Weight Class:', 
+selectInput('weightclass_select', 'Select Weight Class:', 
                 choices = c("All", (ipf_lifts$weight_class_kg ) %>% unique()), 
                 selected =  "All", multiple = T )
 
@@ -182,30 +214,58 @@ selectInput('ageclass_select', 'Select Age Class:',
       dt.subset2() %>% filter(weight_class_kg == input$weightclass_select)
     }
   })
+```   
    
-   renderDataTable(dt.subset3())
+#### Data TAble    
+```{r}     
+   #render table 
+  renderDT(dt.subset3())
+
+```
+
+#### Table Display
+
+```{r}  
+   # Create the actual downloadButton
+h4("download data below")
+   renderUI( {
+  downloadBttn(outputId ="downloadData", label = "Download", size = "sm")
+ 
+})
+
+output$downloadData<-downloadHandler(
+ filename =  paste0("weightlifting-", Sys.Date(), ".csv" ),
+    content = function(file) {
+
+      write.csv(dt.subset3(), file=file)
+    },
+  contentType="text/csv"
+)
+
 ```
 
 
 ### View overall filtered table
 
 ```{r}
-renderDataTable(filtered())
+renderDT(filtered())
 ```
 
 ### Instagram Handle 
 ```{r}
-meta() %>%
-  meta_social(
-    title = "Powerlifting Instagram",
-    description = "Follow our lifting progress as we prepare for our meet",
-    url = "https://www.instagram.com/gradschool_lifts/",
-    image = "https://www.instagram.com/p/Ch7whRjO251/",
-    image_alt = "Cydney & Reagan flex for the 'Gram",
-    og_type = "social media",
-    og_author = c("Cydney Jardine", "Reagan Chiaverini"),
-    twitter_card_type = "app",
-    twitter_creator = "@gradschool_lifts"
-  )
+# meta() %>%
+#   meta_social(
+#     title = "Powerlifting Instagram",
+#     description = "Follow our lifting progress as we prepare for our meet",
+#     url = "https://www.instagram.com/gradschool_lifts/",
+#     image = "https://www.instagram.com/p/Ch7whRjO251/",
+#     image_alt = "Cydney & Reagan flex for the 'Gram",
+#     og_type = "social media",
+#     og_author = c("Cydney Jardine", "Reagan Chiaverini"),
+#     twitter_card_type = "app",
+#     twitter_creator = "@gradschool_lifts"
+#   )
 ```
+
+
 
