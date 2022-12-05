@@ -4,7 +4,9 @@ runtime: shiny
 output: 
   flexdashboard::flex_dashboard:
     orientation: columns
-
+    theme: 
+      version: 4
+      bootswatch: minty
 ---
 
 ```{r setup, include=FALSE}
