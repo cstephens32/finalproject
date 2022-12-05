@@ -24,6 +24,7 @@ library(DT)
 library(ggthemes)
 library(viridis)
 library(table1)
+library(ggthemes)
 ipf_lifts <- readr::read_csv("https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2019/2019-10-08/ipf_lifts.csv") %>% mutate(sex2 = if_else(sex == "F", "Female", "Male"))
 ```
 
@@ -42,8 +43,6 @@ lifts <- SBD_IPF %>%
 
 Column {data-width=1000}
 -------------------------------------
-
-
    
 ### Age and Sex Most Lifted Table
 
@@ -108,9 +107,11 @@ lifts %>%
 ```{r}
 sex_lifting <- lifts %>%
   ggplot(aes(x = date, y = total_three, color = sex)) + 
+  labs(x = "Date", y = "Sum of Top Powerlifts") +
   geom_line() +
-  facet_wrap(~sex)
-sex_lifting
+  facet_wrap(~sex2) +
+  theme_tufte()
+
 
 ggplotly(sex_lifting)
 ```
