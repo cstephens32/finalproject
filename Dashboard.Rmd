@@ -42,8 +42,13 @@ lifts <- SBD_IPF %>%
 
 Column {data-width=1000}
 -------------------------------------
+<<<<<<< HEAD
 ### Text Box
  Text here. 
+=======
+
+
+>>>>>>> e29f7da7cc9e5bd73a6daea6f044d7f8223fa867
    
 ### Age and Sex Most Lifted Table
 
