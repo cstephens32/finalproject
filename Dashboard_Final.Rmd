@@ -24,7 +24,8 @@ library(DT)
 library(ggthemes)
 library(viridis)
 library(table1)
-ipf_lifts <- readr::read_csv("https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2019/2019-10-08/ipf_lifts.csv") %>% mutate(sex2 = if_else(sex == "F", "Female", "Male"))
+ipf_lifts <- readr::read_csv("https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2019/2019-10-08/ipf_lifts.csv") %>% mutate(sex2 = if_else(sex == "F", "Female", "Male")) %>% 
+filter(division != "NA")
 ```
 
 ```{r}
@@ -53,48 +54,41 @@ lalalalalalalalalalalablalalalalalalalal
 
 ### Data Filtering
 
-```{r interactive, echo=FALSE }
+```{r overall filter, echo=FALSE }
 #sex options
-selectInput('sex_select', 'Select sex:',
-            choices = c("All", ipf_lifts$sex2 %>% unique()), selected="All")
+selectizeInput('division_select', 'Select Division:',
+            choices = c("All", ipf_lifts$division %>% unique()), selected="All", multiple = T)
 
-dt.subset <- reactive({
-    if (input$sex_select=="All") {
+
+
+overall.subset <- reactive({
+    if (input$division_select=="All") {
       ipf_lifts
     }else{
-      ipf_lifts %>% filter(sex2 == input$sex_select)
+      ipf_lifts %>% filter(division == input$division_select)
     }
   })
 
 #age options
 
-selectInput('ageclass_select', 'Select Age Class:', 
-                choices = c("All", (ipf_lifts$age_class) %>% unique()), 
-                selected =  "All" )
+selectInput('meet_select', 'Select Meets:',
+                choices = c("All", (ipf_lifts$meet_name) %>% unique()),
+                selected =  "All", multiple = T )
 
 
- dt.subset2 <- reactive({
-    if (input$ageclass_select== "All") {
-    dt.subset()
+ overall.subset2 <- reactive({
+    if (input$meet_select== "All") {
+    overall.subset()
     }else{
-   dt.subset() %>% filter(age_class == input$ageclass_select)
+   overall.subset() %>% filter(meet_name == input$meet_select)
     }
   })
 
-renderUI({
-    selectInput('weightclass_select', 'Select Weight Class:', 
-                choices = c("All", (dt.subset2()$weight_class_kg ) %>% unique()), 
-                selected =  "All" )
-  })
 
-   dt.subset3 <- reactive({
-    if (input$weightclass_select=="All") {
-      dt.subset2()
-    }else{
-      dt.subset2() %>% filter(weight_class_kg == input$weightclass_select)
-    }
-  })
-
+ filtered <- reactive({
+   overall.subset2()
+ })
+ 
 ```
 
 
@@ -122,6 +116,59 @@ ggplotly(sex_lifting)
 
 ### Table
 
+```{r interactive, echo=FALSE }
+#sex options
+selectInput('sex_select', 'Select sex:',
+            choices = c("All", ipf_lifts$sex2 %>% unique()), selected="All", multiple = T )
+
+dt.subset <- reactive({
+    if (input$sex_select=="All") {
+      filtered()
+    }else{
+      filtered() %>% filter(sex2 == input$sex_select)
+    }
+  })
+
+#age options
+
+selectInput('ageclass_select', 'Select Age Class:', 
+                choices = c("All", (ipf_lifts$age_class) %>% unique()), 
+                selected =  "All", multiple = T  )
+
+
+ dt.subset2 <- reactive({
+    if (input$ageclass_select== "All") {
+    dt.subset()
+    }else{
+   dt.subset() %>% filter(age_class == input$ageclass_select)
+    }
+  })
+
+# renderUI({
+#     selectInput('weightclass_select', 'Select Weight Class:', 
+#                 choices = c("All", (dt.subset2()$weight_class_kg ) %>% unique()), 
+#                 selected =  "All" )
+#   })
+
+     selectInput('weightclass_select', 'Select Weight Class:', 
+                choices = c("All", (ipf_lifts$weight_class_kg ) %>% unique()), 
+                selected =  "All", multiple = T )
+
+ 
+   dt.subset3 <- reactive({
+    if (input$weightclass_select=="All") {
+      dt.subset2()
+    }else{
+      dt.subset2() %>% filter(weight_class_kg == input$weightclass_select)
+    }
+  })
+   
+   renderDataTable(dt.subset3())
+```
+
+
+### View overall filtered table
+
 ```{r}
-renderDataTable(dt.subset3())
+renderDataTable(filtered())
 ```
