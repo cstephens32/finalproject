@@ -117,13 +117,13 @@ Column {.tabset}
 ### Age and Weight Lifted
 
 ```{r}
-sex_lifting <- lifts %>%
-  ggplot(aes(x = date, y = total_three, color = sex)) + 
-  geom_line() +
-  facet_wrap(~sex)
-sex_lifting
+age_lifting1 <- lifts %>%
+  ggplot(aes(x = age, y = total_three)) + 
+  geom_bar(stat = "identity") +
+  coord_flip()
 
-ggplotly(sex_lifting)
+
+ggplotly(age_lifting1)
 ```   
  
 ### Sex and Weight Lifted
@@ -131,8 +131,9 @@ ggplotly(sex_lifting)
 ```{r}
 sex_lifting <- lifts %>%
   ggplot(aes(x = date, y = total_three, color = sex)) + 
+  labs(x = "Date", y = "Total 3 Lifts") +
   geom_line() +
-  facet_wrap(~sex)
+  facet_wrap(~sex2)
 sex_lifting
 
 ggplotly(sex_lifting)
