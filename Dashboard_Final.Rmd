@@ -4,11 +4,14 @@ runtime: shiny
 output: 
   flexdashboard::flex_dashboard:
     orientation: columns
-
+    theme: 
+      version: 4
+      bootswatch: minty
 ---
 
 ```{r setup, include=FALSE}
 library(flexdashboard)
+library(metathis)
 library(readr)
 library(lubridate)
 library(shiny)
@@ -40,17 +43,28 @@ lifts <- SBD_IPF %>%
   mutate(total_three = sum(c(best3squat_kg, best3bench_kg, best3deadlift_kg), na.rm = TRUE))
 ```
 
+---
+title: '`IPF Lifting Data`'
+---
+
+
 Column {.sidebar}
 -----------------------------------------------------------------------
 
-### I didn't choose The powerlifting life 
+### International Powerlifting Federation Data 
     
-blalalalalalalalalalalalalablalalalalalala
-lalalalalalablalalalalalalalalalalal
-alablalalalalalalalalalalalalablalal
-alalalalalalalalalalablalalalalalalalalala
-lalalablalalalalalalalalalalalalablala
-lalalalalalalalalalalablalalalalalalalal
+blalalalalalalalalala
+blalalalalalalalalala
+blalalalalalalalalala
+blalalalalalalalalala
+blalalalalalalalalala
+blalalalalalalalalala
+blalalalalalalalalala
+blalalalalalalalalala
+blalalalalalalalalala
+blalalalalalalalalala
+blalalalalalalalalala
+
 
 ### Data Filtering
 
@@ -98,8 +112,13 @@ Column {.tabset}
 ### Age and Weight Lifted
 
 ```{r}
-lifts %>% 
-  ggplot(aes(x = age_class, total_three))
+age_lifting1 <- lifts %>%
+  ggplot(aes(x = age, y = total_three)) + 
+  geom_bar(stat = "identity") +
+  coord_flip()
+
+
+ggplotly(age_lifting1)
 ```   
  
 ### Sex and Weight Lifted
@@ -107,8 +126,9 @@ lifts %>%
 ```{r}
 sex_lifting <- lifts %>%
   ggplot(aes(x = date, y = total_three, color = sex)) + 
+  labs(x = "Date", y = "Total 3 Lifts") +
   geom_line() +
-  facet_wrap(~sex)
+  facet_wrap(~sex2)
 sex_lifting
 
 ggplotly(sex_lifting)
@@ -172,3 +192,20 @@ selectInput('ageclass_select', 'Select Age Class:',
 ```{r}
 renderDataTable(filtered())
 ```
+
+### Instagram Handle 
+```{r}
+meta() %>%
+  meta_social(
+    title = "Powerlifting Instagram",
+    description = "Follow our lifting progress as we prepare for our meet",
+    url = "https://www.instagram.com/gradschool_lifts/",
+    image = "https://www.instagram.com/p/Ch7whRjO251/",
+    image_alt = "Cydney & Reagan flex for the 'Gram",
+    og_type = "social media",
+    og_author = c("Cydney Jardine", "Reagan Chiaverini"),
+    twitter_card_type = "app",
+    twitter_creator = "@gradschool_lifts"
+  )
+```
+
