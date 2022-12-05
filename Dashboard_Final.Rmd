@@ -39,17 +39,28 @@ lifts <- SBD_IPF %>%
   mutate(total_three = sum(c(best3squat_kg, best3bench_kg, best3deadlift_kg), na.rm = TRUE))
 ```
 
+---
+title: '`IPF Lifting Data`'
+---
+
+
 Column {.sidebar}
 -----------------------------------------------------------------------
 
-### I didn't choose The powerlifting life 
+### International Powerlifting Federation Data 
     
-blalalalalalalalalalalalalablalalalalalala
-lalalalalalablalalalalalalalalalalal
-alablalalalalalalalalalalalalablalal
-alalalalalalalalalalablalalalalalalalalala
-lalalablalalalalalalalalalalalalablala
-lalalalalalalalalalalablalalalalalalalal
+blalalalalalalalalala
+blalalalalalalalalala
+blalalalalalalalalala
+blalalalalalalalalala
+blalalalalalalalalala
+blalalalalalalalalala
+blalalalalalalalalala
+blalalalalalalalalala
+blalalalalalalalalala
+blalalalalalalalalala
+blalalalalalalalalala
+
 
 ### Data Filtering
 
@@ -104,8 +115,13 @@ Column {.tabset}
 ### Age and Weight Lifted
 
 ```{r}
-lifts %>% 
-  ggplot(aes(x = age_class, total_three))
+sex_lifting <- lifts %>%
+  ggplot(aes(x = date, y = total_three, color = sex)) + 
+  geom_line() +
+  facet_wrap(~sex)
+sex_lifting
+
+ggplotly(sex_lifting)
 ```   
  
 ### Sex and Weight Lifted
