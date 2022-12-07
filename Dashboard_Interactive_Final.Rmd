@@ -1,4 +1,3 @@
-
 ---
 title: "Tabset Row"
 runtime: shiny
@@ -67,18 +66,7 @@ Column {.sidebar}
 
 ### International Powerlifting Federation Data 
     
-blalalalalalalalalala
-blalalalalalalalalala
-blalalalalalalalalala
-blalalalalalalalalala
-blalalalalalalalalala
-blalalalalalalalalala
-blalalalalalalalalala
-blalalalalalalalalala
-blalalalalalalalalala
-blalalalalalalalalala
-blalalalalalalalalala
-
+Data was obtained from TidyTuesday and OpenPowerlifting.org. 
 
 ### Data Filtering
 
@@ -115,6 +103,20 @@ selectInput('meet_select', 'Select Meets:',
    overall.subset2()
  })
  
+ h4("download data below")
+   renderUI( {
+  downloadBttn(outputId ="downloadData", label = "Download", size = "sm")
+ 
+})
+output$downloadData<-downloadHandler(
+ filename =  paste0("weightlifting-", Sys.Date(), ".csv" ),
+    content = function(file) {
+      write.csv(dt.subset3(), file=file)
+    },
+  contentType="text/csv"
+)
+ 
+ 
 ```
 
 
@@ -128,8 +130,9 @@ Column {.tabset}
    agesex_Plot <- reactive({
     p <-  filt_lift() %>% #filt_lift() makes this reactive to filtered data
       ggplot(aes(x = age, y = total_three)) + 
-      geom_bar(stat = "identity") +
+      geom_col(stat = "identity") +
       coord_flip()
+    
     ggplot_build(p)
   })
 
@@ -166,10 +169,10 @@ renderPlot({
   })  
 ```
 
-### Table
+### Table {data-height=100}
 
-#### Select Options
 ```{r interactive, echo=FALSE }
+
 #sex options
 selectInput('sex_select', 'Select sex:',
             choices = c("All", ipf_lifts$sex2 %>% unique()), selected="All", multiple = T )
@@ -215,41 +218,29 @@ selectInput('weightclass_select', 'Select Weight Class:',
       dt.subset2() %>% filter(weight_class_kg == input$weightclass_select)
     }
   })
+
+  
+    renderDataTable(dt.subset3())
+    
 ```   
    
-#### Data TAble    
-```{r}     
-   #render table 
-  renderDT(dt.subset3())
-
-```
-
-#### Table Display
+   
+#### download Display
 
 ```{r}  
    # Create the actual downloadButton
-h4("download data below")
-   renderUI( {
-  downloadBttn(outputId ="downloadData", label = "Download", size = "sm")
- 
-})
 
-output$downloadData<-downloadHandler(
- filename =  paste0("weightlifting-", Sys.Date(), ".csv" ),
-    content = function(file) {
-
-      write.csv(dt.subset3(), file=file)
-    },
-  contentType="text/csv"
-)
-
-```
+```  
+   
+   
 
 ### View overall filtered table
 
 ```{r}
 renderDT(filtered())
 ```
+
+
 
 
 ### @GradSchoolLifts 
