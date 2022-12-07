@@ -55,6 +55,24 @@ filt_lift <- reactive({
   mutate(total_three = sum(c(best3squat_kg, best3bench_kg, best3deadlift_kg), na.rm = TRUE))
 })
 
+age_lifting_new <- reactive({ 
+  filt_lift() %>% 
+  group_by(age) %>% 
+  summarize(mean = mean(total_three),
+            age = age,
+            age_class = age_class) %>% 
+  filter(age != 0.5) %>%
+  distinct(age, .keep_all = TRUE)
+})
+
+new <- reactive({
+  filt_lift() %>% 
+    group_by(date, sex2) %>% 
+    summarize(avg_top3 = mean(total_three),
+            date = date) %>%
+    distinct(sex2, .keep_all = TRUE)
+})
+
 ```
 ---
 title: '`IPF Lifting Data`'
@@ -123,11 +141,24 @@ Column {.tabset}
 ### Age and Weight Lifted
 
 ```{r}
+
+
+#age_lifting_new() %>% 
+#  ggplot(aes(x = age, y = mean)) + 
+#  geom_col(stat = "count", fill = "salmon") +
+#  labs (x = "Age of Competitor at Competition", y = "Average Total of Top 3 Lifts")
+
+
 #build plot  
    agesex_Plot <- reactive({
-    p <-  filt_lift() %>% #filt_lift() makes this reactive to filtered data
-      ggplot(aes(x = age, y = total_three)) + 
-      geom_bar(stat = "identity", fill = "salmon") 
+    p <-  age_lifting_new() %>% 
+  ggplot(aes(x = age, y = mean)) + 
+  geom_col(stat = "count", fill = "salmon") +
+  labs (x = "Age of Competitor at Competition", y = "Average Total of Top 3 Lifts")
+
+ #     filt_lift() %>% #filt_lift() makes this reactive to filtered data
+  #    ggplot(aes(x = age, y = total_three)) + 
+  #    geom_bar(stat = "identity", fill = "salmon") 
     ggplot_build(p)
   })
 
@@ -150,13 +181,22 @@ Column {.tabset}
 # 
 # ggplotly(sex_lifting)
 
- weightsex_Plot <- reactive({
-  p2 <-  filt_lift()  %>%
-  ggplot(aes(x = date, y = total_three, color = sex)) + 
-  labs(x = "Date", y = "Total 3 Lifts") +
-  geom_line() +
-  facet_wrap(~sex2)
- ggplot_build(p2)
+library(tidyverse)
+library(ggthemes)
+weightsex_Plot <- reactive({
+  weight_sex <- new() %>% 
+  ggplot(aes(x = date, y = avg_top3, color = sex2)) + 
+  labs(x = "Date", y = "Total Average 3 Lifts") +
+  geom_point() +
+  geom_jitter() +
+  stat_smooth() +
+  facet_wrap(~sex2) +
+  theme_few() +
+  labs(y = "Average of 3 Lifts",
+       title = "Average of 3 Lifts Over Time by Sex",
+       caption = "If data is not displayed, there are not enough data points to graph/display") +
+    guides(color = guide_legend(title = "Sex"))
+ ggplot_build(weight_sex)
   })
   
 renderPlot({
@@ -242,6 +282,15 @@ output$downloadData<-downloadHandler(
 )
 
 ```
+
+
+### View overall filtered table
+
+```{r}
+renderDT(new())
+```
+
+
 
 ### @GradSchoolLifts 
 
