@@ -1,11 +1,10 @@
-
 ---
 title: "Tabset Row"
 runtime: shiny
 output: 
   flexdashboard::flex_dashboard:
     orientation: columns
-  theme: 
+    theme: 
       version: 4
       bootswatch: minty
 ---
@@ -128,8 +127,7 @@ Column {.tabset}
    agesex_Plot <- reactive({
     p <-  filt_lift() %>% #filt_lift() makes this reactive to filtered data
       ggplot(aes(x = age, y = total_three)) + 
-      geom_bar(stat = "identity") +
-      coord_flip()
+      geom_bar(stat = "identity", fill = "salmon") 
     ggplot_build(p)
   })
 
@@ -244,13 +242,6 @@ output$downloadData<-downloadHandler(
 )
 
 ```
-
-### View overall filtered table
-
-```{r}
-renderDT(filtered())
-```
-
 
 ### @GradSchoolLifts 
 
