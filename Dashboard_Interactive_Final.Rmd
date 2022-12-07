@@ -261,7 +261,28 @@ selectInput('weightclass_select', 'Select Weight Class:',
   })
 
   
-    renderDataTable(dt.subset3())
+  renametable <-  reactive({ 
+    dt.subset3() %>% rename(
+    Name = name,
+    Sex = sex,
+    Event = event,
+    Equipment = equipment,
+    Age = age,
+    `Age Class` =  age_class,
+    Division = division,
+    `Bodyweight (kg)` = bodyweight_kg,
+     `Weightclass (kg)`= weight_class_kg,
+    `Best Squat (kg)` = best3squat_kg,
+    `Best Bench (kg)` = best3bench_kg,
+    `Best Deadlift (kg)` = best3deadlift_kg,
+    Place = place,
+    Date = date,
+    Federation = federation,
+    `Meet Name` = meet_name
+   ) %>% select(-c("sex2"))
+    })
+   
+  renderDT(renametable())
     
 ```   
    
