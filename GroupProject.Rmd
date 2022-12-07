@@ -58,15 +58,20 @@ table_1 <- lifts %>%
   group_by(sex, age_class, weight_class_kg) %>%
   summarize(Total = n())
 
+library(table1)
+table_1 <- table1(lifts, ~ age_class, weight_class_kg | sex)
+
 table_2 <- lifts %>%
   group_by(sex) %>%
   summarize(Total = n())
 table_2 <- lifts %>%
   group_by(age_class) %>%
   summarize(Total = n())
+
 ```  
 =======
 ```  
+
 
 
 
