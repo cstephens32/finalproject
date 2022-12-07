@@ -56,6 +56,14 @@ filt_lift <- reactive({
   mutate(total_three = sum(c(best3squat_kg, best3bench_kg, best3deadlift_kg), na.rm = TRUE))
 })
 
+new <- reactive({
+  filt_lift() %>% 
+    group_by(date, sex2) %>% 
+    summarize(avg_top3 = mean(total_three),
+            date = date) %>%
+    distinct(sex2, .keep_all = TRUE)
+})
+
 ```
 ---
 title: '`IPF Lifting Data`'
@@ -154,14 +162,8 @@ Column {.tabset}
 
 library(tidyverse)
 library(ggthemes)
-new <- lifts %>% 
-  group_by(date, sex2) %>% 
-  summarize(avg_top3 = mean(total_three),
-            date = date) %>%
-  distinct(sex2, .keep_all = TRUE)
-
- weightsex_Plot <- reactive({
-  new %>% 
+weightsex_Plot <- reactive({
+  weight_sex <- new() %>% 
   ggplot(aes(x = date, y = avg_top3, color = sex2)) + 
   labs(x = "Date", y = "Total Average 3 Lifts") +
   geom_point() +
@@ -172,7 +174,7 @@ new <- lifts %>%
   labs(y = "Average of 3 Lifts",
        title = "Average of 3 Lifts Over Time by Sex") +
     guides(color = guide_legend(title = "Sex"))
- ggplot_build(p2)
+ ggplot_build(weight_sex)
   })
   
 renderPlot({
@@ -262,7 +264,7 @@ output$downloadData<-downloadHandler(
 ### View overall filtered table
 
 ```{r}
-renderDT(filtered())
+renderDT(new())
 ```
 
 
