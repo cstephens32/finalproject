@@ -75,17 +75,9 @@ Column {.sidebar}
 
 ### International Powerlifting Federation Data 
     
-blalalalalalalalalala
-blalalalalalalalalala
-blalalalalalalalalala
-blalalalalalalalalala
-blalalalalalalalalala
-blalalalalalalalalala
-blalalalalalalalalala
-blalalalalalalalalala
-blalalalalalalalalala
-blalalalalalalalalala
-blalalalalalalalalala
+Explore the differences in weight lifted by sex and age by navigating to the correlating tabs. If you're interested about a specific division or meet, feel free to filter to your specific interests below, and within each tab. To get to know the brains behind the dashboard, visit the last few tabs to view the creators' instagram.
+
+Source: [https://www.openpowerlifting.org/] (OpenPowerlifting)
 
 
 ### Data Filtering
