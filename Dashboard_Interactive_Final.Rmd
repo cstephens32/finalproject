@@ -172,7 +172,8 @@ weightsex_Plot <- reactive({
   facet_wrap(~sex2) +
   theme_few() +
   labs(y = "Average of 3 Lifts",
-       title = "Average of 3 Lifts Over Time by Sex") +
+       title = "Average of 3 Lifts Over Time by Sex",
+       caption = "If data is not displayed, there are not enough data points to graph/display") +
     guides(color = guide_legend(title = "Sex"))
  ggplot_build(weight_sex)
   })
